@@ -2,30 +2,30 @@
 FROM oven/bun:1.1-alpine AS base
 WORKDIR /app
 
-# ---- Dependencies ----
-FROM base AS deps
-COPY package.json bun.lockb ./
+# ---- Development ----
+FROM base AS dev
+COPY package.json ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/types/package.json ./packages/types/
-RUN bun install --frozen-lockfile
-
-# ---- Development ----
-FROM base AS dev
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
-COPY --from=deps /app/packages/ui/node_modules ./packages/ui/node_modules
-COPY --from=deps /app/packages/types/node_modules ./packages/types/node_modules
-# Source is bind-mounted in dev via docker-compose
+RUN bun install
 EXPOSE 3000
-CMD ["bun", "run", "--hot", "apps/web/dev"]
+CMD ["bun", "run", "--cwd", "apps/web", "next", "dev", "--port", "3000", "--hostname", "0.0.0.0"]
+
+# ---- Dependencies (for build) ----
+FROM base AS deps
+COPY package.json bun.lock* ./
+COPY apps/web/package.json ./apps/web/
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/types/package.json ./packages/types/
+RUN bun install
 
 # ---- Build ----
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN bun run --filter=web build
+RUN bun run --cwd apps/web next build
 
 # ---- Production / Staging ----
 FROM base AS production

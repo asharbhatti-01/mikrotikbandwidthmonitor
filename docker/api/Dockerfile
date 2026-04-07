@@ -2,23 +2,25 @@
 FROM oven/bun:1.1-alpine AS base
 WORKDIR /app
 
-# ---- Dependencies ----
-FROM base AS deps
-COPY package.json bun.lockb ./
+# ---- Development ----
+FROM base AS dev
+# Copy all package.json files for dependency installation
+COPY package.json ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/db/package.json ./packages/db/
 COPY packages/types/package.json ./packages/types/
-RUN bun install --frozen-lockfile
-
-# ---- Development ----
-FROM base AS dev
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
-COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules
-COPY --from=deps /app/packages/types/node_modules ./packages/types/node_modules
+RUN bun install
 # Source is bind-mounted in dev via docker-compose
 EXPOSE 3001
 CMD ["bun", "run", "--hot", "apps/api/src/index.ts"]
+
+# ---- Dependencies (for build) ----
+FROM base AS deps
+COPY package.json bun.lock* ./
+COPY apps/api/package.json ./apps/api/
+COPY packages/db/package.json ./packages/db/
+COPY packages/types/package.json ./packages/types/
+RUN bun install
 
 # ---- Build ----
 FROM base AS build
