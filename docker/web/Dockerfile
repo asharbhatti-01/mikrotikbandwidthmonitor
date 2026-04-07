@@ -18,7 +18,7 @@ COPY packages/ui ./packages/ui
 COPY packages/types ./packages/types
 EXPOSE 3000
 WORKDIR /app/apps/web
-CMD ["sh", "-c", "ln -sf /app/node_modules /app/apps/web/node_modules && npx next dev --port 3000 --hostname 0.0.0.0"]
+CMD ["sh", "-c", "ln -sf /app/node_modules /app/apps/web/node_modules && npx next dev --port 3000 --hostname 0.0.0.0 --no-turbopack"]
 
 # ---- Dependencies (for build) ----
 FROM base AS deps
