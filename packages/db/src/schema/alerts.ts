@@ -71,7 +71,7 @@ export const alertRules = pgTable("alert_rules", {
 
   enabled: boolean("enabled").notNull().default(true),
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type AlertRule = typeof alertRules.$inferSelect;
@@ -96,9 +96,9 @@ export const alertEvents = pgTable("alert_events", {
     .notNull()
     .references(() => organizations.id, { onDelete: "cascade" }),
 
-  firedAt: timestamp("fired_at").notNull().defaultNow(),
+  firedAt: timestamp("fired_at", { withTimezone: true }).notNull().defaultNow(),
 
-  resolvedAt: timestamp("resolved_at"),
+  resolvedAt: timestamp("resolved_at", { withTimezone: true }),
 
   /** The raw metric value that triggered the rule. */
   metricValue: numeric("metric_value").notNull(),

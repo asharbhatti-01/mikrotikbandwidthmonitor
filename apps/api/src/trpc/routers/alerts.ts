@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
-import { router, protectedProcedure } from "../index.js";
+import { router, protectedProcedure } from "../init.js";
 import { createAlertRuleSchema, updateAlertRuleSchema } from "@mikrotik/types";
 import { alertRules, alertEvents, devices } from "@mikrotik/db/schema";
 

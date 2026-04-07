@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { and, desc, eq, gte, ilike, lte } from "drizzle-orm";
-import { router, protectedProcedure } from "../index.js";
+import { router, protectedProcedure } from "../init.js";
 import { auditLogs, users } from "@mikrotik/db/schema";
 
 /**

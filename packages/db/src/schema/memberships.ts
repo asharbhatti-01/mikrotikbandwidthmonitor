@@ -44,9 +44,9 @@ export const orgMemberships = pgTable(
     }),
 
     /** Null until the invited user explicitly accepts. */
-    acceptedAt: timestamp("accepted_at"),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
 
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [unique("uq_org_memberships_org_user").on(t.orgId, t.userId)]
 );

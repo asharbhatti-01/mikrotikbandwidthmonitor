@@ -27,7 +27,7 @@ export const sites = pgTable("sites", {
 
   longitude: numeric("longitude"),
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type Site = typeof sites.$inferSelect;

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
-import { router, protectedProcedure } from "../index.js";
+import { router, protectedProcedure } from "../init.js";
 import { updateOrgSchema, inviteMemberSchema } from "@mikrotik/types";
 import { organizations, orgMemberships, users } from "@mikrotik/db/schema";
 

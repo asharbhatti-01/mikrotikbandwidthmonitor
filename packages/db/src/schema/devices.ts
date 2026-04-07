@@ -78,7 +78,7 @@ export const devices = pgTable(
 
     status: deviceStatusEnum("status").notNull().default("offline"),
 
-    lastSeenAt: timestamp("last_seen_at"),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }),
 
     /** Uptime reported by the device in seconds. */
     uptimeSeconds: bigint("uptime_seconds", { mode: "number" }),
@@ -93,9 +93,9 @@ export const devices = pgTable(
       .notNull()
       .default(sql`'{}'::text[]`),
 
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     index("idx_devices_org_id").on(t.orgId),

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { router, publicProcedure, authedProcedure } from "../index.js";
+import { router, publicProcedure, authedProcedure } from "../init.js";
 import { auth } from "../../auth.js";
 
 /**

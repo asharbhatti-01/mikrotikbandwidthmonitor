@@ -11,6 +11,7 @@ COPY packages/ui/package.json ./packages/ui/
 COPY packages/types/package.json ./packages/types/
 RUN bun install
 EXPOSE 3000
+WORKDIR /app/apps/web
 CMD ["npx", "next", "dev", "--port", "3000", "--hostname", "0.0.0.0"]
 
 # ---- Dependencies (for build) ----

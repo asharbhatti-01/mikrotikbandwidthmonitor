@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq, gt } from "drizzle-orm";
-import { router, protectedProcedure } from "../index.js";
+import { router, protectedProcedure } from "../init.js";
 import { snapshotListSchema, triggerBackupSchema } from "@mikrotik/types";
 import { configSnapshots, devices } from "@mikrotik/db/schema";
 

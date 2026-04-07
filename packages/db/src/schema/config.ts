@@ -51,7 +51,7 @@ export const configSnapshots = pgTable("config_snapshots", {
     .notNull()
     .references(() => organizations.id, { onDelete: "cascade" }),
 
-  takenAt: timestamp("taken_at").notNull().defaultNow(),
+  takenAt: timestamp("taken_at", { withTimezone: true }).notNull().defaultNow(),
 
   triggeredBy: snapshotTriggerEnum("triggered_by").notNull(),
 
@@ -106,11 +106,11 @@ export const pendingCommands = pgTable("pending_commands", {
     onDelete: "set null",
   }),
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 
-  sentAt: timestamp("sent_at"),
+  sentAt: timestamp("sent_at", { withTimezone: true }),
 
-  ackedAt: timestamp("acked_at"),
+  ackedAt: timestamp("acked_at", { withTimezone: true }),
 
   /** Response payload returned by the device after execution. */
   result: jsonb("result"),

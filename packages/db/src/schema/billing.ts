@@ -49,7 +49,7 @@ export const plans = pgTable("plans", {
     scale: 4,
   }),
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type Plan = typeof plans.$inferSelect;
@@ -87,17 +87,17 @@ export const subscriptions = pgTable("subscriptions", {
     length: 100,
   }).unique(),
 
-  currentPeriodStart: timestamp("current_period_start"),
+  currentPeriodStart: timestamp("current_period_start", { withTimezone: true }),
 
-  currentPeriodEnd: timestamp("current_period_end"),
+  currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
 
-  trialEnd: timestamp("trial_end"),
+  trialEnd: timestamp("trial_end", { withTimezone: true }),
 
-  canceledAt: timestamp("canceled_at"),
+  canceledAt: timestamp("canceled_at", { withTimezone: true }),
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type Subscription = typeof subscriptions.$inferSelect;

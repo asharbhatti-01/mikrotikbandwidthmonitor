@@ -22,7 +22,7 @@ export const users = pgTable("users", {
 
   mfaEnabled: boolean("mfa_enabled").notNull().default(false),
 
-  lastLoginAt: timestamp("last_login_at"),
+  lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
 
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

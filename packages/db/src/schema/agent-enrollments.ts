@@ -34,11 +34,11 @@ export const agentEnrollments = pgTable("agent_enrollments", {
   /** SHA-256 fingerprint of the client TLS certificate, set after enrolment. */
   clientCertFingerprint: text("client_cert_fingerprint"),
 
-  lastConnectedAt: timestamp("last_connected_at"),
+  lastConnectedAt: timestamp("last_connected_at", { withTimezone: true }),
 
   connectedIp: text("connected_ip"),
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type AgentEnrollment = typeof agentEnrollments.$inferSelect;

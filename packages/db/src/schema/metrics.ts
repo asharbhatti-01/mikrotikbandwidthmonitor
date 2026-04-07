@@ -31,7 +31,7 @@ export const deviceMetrics = pgTable(
       .notNull()
       .references(() => devices.id, { onDelete: "cascade" }),
 
-    collectedAt: timestamp("collected_at").notNull(),
+    collectedAt: timestamp("collected_at", { withTimezone: true }).notNull(),
 
     /** CPU load percentage (0-100). */
     cpuLoad: smallint("cpu_load"),

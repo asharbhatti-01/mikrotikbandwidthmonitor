@@ -43,14 +43,14 @@ export const apiKeys = pgTable("api_keys", {
     onDelete: "set null",
   }),
 
-  lastUsedAt: timestamp("last_used_at"),
+  lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
 
-  expiresAt: timestamp("expires_at"),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
 
   /** Set when the key is explicitly revoked; null = still active. */
-  revokedAt: timestamp("revoked_at"),
+  revokedAt: timestamp("revoked_at", { withTimezone: true }),
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type ApiKey = typeof apiKeys.$inferSelect;

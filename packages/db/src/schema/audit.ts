@@ -63,7 +63,7 @@ export const auditLogs = pgTable("audit_logs", {
 
   userAgent: text("user_agent"),
 
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type AuditLog = typeof auditLogs.$inferSelect;

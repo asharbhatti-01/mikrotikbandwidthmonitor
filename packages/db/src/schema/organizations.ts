@@ -42,7 +42,7 @@ export const organizations = pgTable("organizations", {
 
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type Organization = typeof organizations.$inferSelect;
