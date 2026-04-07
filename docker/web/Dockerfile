@@ -17,10 +17,8 @@ COPY apps/web ./apps/web
 COPY packages/ui ./packages/ui
 COPY packages/types ./packages/types
 EXPOSE 3000
-# Symlink root node_modules into apps/web so Next.js resolves packages
-RUN ln -s /app/node_modules /app/apps/web/node_modules
 WORKDIR /app/apps/web
-CMD ["npx", "next", "dev", "--port", "3000", "--hostname", "0.0.0.0"]
+CMD ["sh", "-c", "ln -sf /app/node_modules /app/apps/web/node_modules && npx next dev --port 3000 --hostname 0.0.0.0"]
 
 # ---- Dependencies (for build) ----
 FROM base AS deps
