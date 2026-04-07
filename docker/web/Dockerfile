@@ -13,7 +13,8 @@ COPY packages/types ./packages/types
 # Install deps after copy (hoists to /app/node_modules)
 RUN bun install
 EXPOSE 3000
-CMD ["npx", "--prefix", "apps/web", "next", "dev", "--port", "3000", "--hostname", "0.0.0.0"]
+WORKDIR /app/apps/web
+CMD ["sh", "-c", "ln -sf /app/node_modules ./node_modules 2>/dev/null; exec npx next dev --port 3000 --hostname 0.0.0.0"]
 
 # ---- Dependencies (for build) ----
 FROM base AS deps
