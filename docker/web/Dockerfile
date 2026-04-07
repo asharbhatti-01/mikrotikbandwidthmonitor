@@ -15,7 +15,7 @@ RUN bun install
 EXPOSE 3000
 WORKDIR /app/apps/web
 ENV NEXT_TURBOPACK=0
-CMD ["sh", "-c", "ln -sf /app/node_modules ./node_modules 2>/dev/null; exec node /app/node_modules/.bin/next dev --port 3000 --hostname 0.0.0.0"]
+CMD ["sh", "-c", "ln -sf /app/node_modules ./node_modules 2>/dev/null; exec bun run next dev --port 3000 --hostname 0.0.0.0"]
 
 # ---- Dependencies (for build) ----
 FROM base AS deps
