@@ -37,7 +37,7 @@ services:
       retries: 5
 
   minio:
-    image: minio/minio:latest
+    image: quay.io/minio/minio:RELEASE.2024-01-31T20-20-33Z
     restart: unless-stopped
     ports:
       - "9000:9000"   # S3 API
@@ -49,13 +49,13 @@ services:
       - minio_data:/data
     command: server /data --console-address ":9001"
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 5s
       timeout: 3s
       retries: 5
 
   minio-setup:
-    image: minio/mc:latest
+    image: quay.io/minio/mc:RELEASE.2024-01-31T08-59-40Z
     depends_on:
       minio:
         condition: service_healthy
