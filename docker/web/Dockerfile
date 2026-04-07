@@ -5,17 +5,14 @@ WORKDIR /app
 
 # ---- Development ----
 FROM base AS dev
+# Copy everything first
 COPY package.json ./
-COPY apps/web/package.json ./apps/web/
-COPY packages/ui/package.json ./packages/ui/
-COPY packages/types/package.json ./packages/types/
-RUN bun install
-# Copy source into image (volume mount overrides at runtime)
 COPY apps/web ./apps/web
 COPY packages/ui ./packages/ui
 COPY packages/types ./packages/types
+# Install deps after copy (hoists to /app/node_modules)
+RUN bun install
 EXPOSE 3000
-# Run from monorepo root so node_modules resolves correctly
 CMD ["npx", "--prefix", "apps/web", "next", "dev", "--port", "3000", "--hostname", "0.0.0.0"]
 
 # ---- Dependencies (for build) ----
