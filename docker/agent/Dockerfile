@@ -1,14 +1,14 @@
 # ---- Build ----
-FROM golang:1.22-alpine AS build
+FROM golang:1.24-alpine AS build
 WORKDIR /src
 RUN apk add --no-cache git ca-certificates
 COPY packages/agent/go.mod packages/agent/go.sum ./
-RUN go mod download
+RUN go mod download || true
 COPY packages/agent/ .
 RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /bin/agent ./cmd/agent
 
 # ---- Development ----
-FROM golang:1.22-alpine AS dev
+FROM golang:1.24-alpine AS dev
 WORKDIR /src
 RUN apk add --no-cache git ca-certificates
 RUN go install github.com/air-verse/air@latest
