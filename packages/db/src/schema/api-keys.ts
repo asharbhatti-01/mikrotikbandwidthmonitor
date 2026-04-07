@@ -1,7 +1,7 @@
 import {
   pgTable,
   text,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -43,14 +43,14 @@ export const apiKeys = pgTable("api_keys", {
     onDelete: "set null",
   }),
 
-  lastUsedAt: timestamptz("last_used_at"),
+  lastUsedAt: timestamp("last_used_at"),
 
-  expiresAt: timestamptz("expires_at"),
+  expiresAt: timestamp("expires_at"),
 
   /** Set when the key is explicitly revoked; null = still active. */
-  revokedAt: timestamptz("revoked_at"),
+  revokedAt: timestamp("revoked_at"),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export type ApiKey = typeof apiKeys.$inferSelect;

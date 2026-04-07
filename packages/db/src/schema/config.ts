@@ -4,7 +4,7 @@ import {
   pgEnum,
   pgTable,
   text,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -51,7 +51,7 @@ export const configSnapshots = pgTable("config_snapshots", {
     .notNull()
     .references(() => organizations.id, { onDelete: "cascade" }),
 
-  takenAt: timestamptz("taken_at").notNull().defaultNow(),
+  takenAt: timestamp("taken_at").notNull().defaultNow(),
 
   triggeredBy: snapshotTriggerEnum("triggered_by").notNull(),
 
@@ -106,11 +106,11 @@ export const pendingCommands = pgTable("pending_commands", {
     onDelete: "set null",
   }),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 
-  sentAt: timestamptz("sent_at"),
+  sentAt: timestamp("sent_at"),
 
-  ackedAt: timestamptz("acked_at"),
+  ackedAt: timestamp("acked_at"),
 
   /** Response payload returned by the device after execution. */
   result: jsonb("result"),

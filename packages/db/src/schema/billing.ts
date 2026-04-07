@@ -4,7 +4,7 @@ import {
   pgEnum,
   pgTable,
   text,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -49,7 +49,7 @@ export const plans = pgTable("plans", {
     scale: 4,
   }),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export type Plan = typeof plans.$inferSelect;
@@ -87,17 +87,17 @@ export const subscriptions = pgTable("subscriptions", {
     length: 100,
   }).unique(),
 
-  currentPeriodStart: timestamptz("current_period_start"),
+  currentPeriodStart: timestamp("current_period_start"),
 
-  currentPeriodEnd: timestamptz("current_period_end"),
+  currentPeriodEnd: timestamp("current_period_end"),
 
-  trialEnd: timestamptz("trial_end"),
+  trialEnd: timestamp("trial_end"),
 
-  canceledAt: timestamptz("canceled_at"),
+  canceledAt: timestamp("canceled_at"),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 
-  updatedAt: timestamptz("updated_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export type Subscription = typeof subscriptions.$inferSelect;

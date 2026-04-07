@@ -2,7 +2,7 @@ import {
   boolean,
   pgTable,
   text,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -22,9 +22,9 @@ export const users = pgTable("users", {
 
   mfaEnabled: boolean("mfa_enabled").notNull().default(false),
 
-  lastLoginAt: timestamptz("last_login_at"),
+  lastLoginAt: timestamp("last_login_at"),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export type User = typeof users.$inferSelect;

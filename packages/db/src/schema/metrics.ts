@@ -5,7 +5,7 @@ import {
   pgTable,
   primaryKey,
   smallint,
-  timestamptz,
+  timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
@@ -31,7 +31,7 @@ export const deviceMetrics = pgTable(
       .notNull()
       .references(() => devices.id, { onDelete: "cascade" }),
 
-    collectedAt: timestamptz("collected_at").notNull(),
+    collectedAt: timestamp("collected_at").notNull(),
 
     /** CPU load percentage (0-100). */
     cpuLoad: smallint("cpu_load"),

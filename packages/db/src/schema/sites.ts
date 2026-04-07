@@ -2,7 +2,7 @@ import {
   numeric,
   pgTable,
   text,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -27,7 +27,7 @@ export const sites = pgTable("sites", {
 
   longitude: numeric("longitude"),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export type Site = typeof sites.$inferSelect;

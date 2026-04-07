@@ -2,7 +2,7 @@ import {
   jsonb,
   pgTable,
   text,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -63,7 +63,7 @@ export const auditLogs = pgTable("audit_logs", {
 
   userAgent: text("user_agent"),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export type AuditLog = typeof auditLogs.$inferSelect;

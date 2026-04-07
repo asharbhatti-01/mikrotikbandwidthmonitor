@@ -2,7 +2,7 @@ import {
   pgEnum,
   pgTable,
   primaryKey,
-  timestamptz,
+  timestamp,
   unique,
   uuid,
 } from "drizzle-orm/pg-core";
@@ -44,9 +44,9 @@ export const orgMemberships = pgTable(
     }),
 
     /** Null until the invited user explicitly accepts. */
-    acceptedAt: timestamptz("accepted_at"),
+    acceptedAt: timestamp("accepted_at"),
 
-    createdAt: timestamptz("created_at").notNull().defaultNow(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [unique("uq_org_memberships_org_user").on(t.orgId, t.userId)]
 );

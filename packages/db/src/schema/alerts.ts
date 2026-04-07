@@ -5,7 +5,7 @@ import {
   pgEnum,
   pgTable,
   text,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -71,7 +71,7 @@ export const alertRules = pgTable("alert_rules", {
 
   enabled: boolean("enabled").notNull().default(true),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export type AlertRule = typeof alertRules.$inferSelect;
@@ -96,9 +96,9 @@ export const alertEvents = pgTable("alert_events", {
     .notNull()
     .references(() => organizations.id, { onDelete: "cascade" }),
 
-  firedAt: timestamptz("fired_at").notNull().defaultNow(),
+  firedAt: timestamp("fired_at").notNull().defaultNow(),
 
-  resolvedAt: timestamptz("resolved_at"),
+  resolvedAt: timestamp("resolved_at"),
 
   /** The raw metric value that triggered the rule. */
   metricValue: numeric("metric_value").notNull(),

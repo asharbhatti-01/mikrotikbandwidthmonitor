@@ -2,7 +2,7 @@ import {
   boolean,
   pgTable,
   text,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -34,11 +34,11 @@ export const agentEnrollments = pgTable("agent_enrollments", {
   /** SHA-256 fingerprint of the client TLS certificate, set after enrolment. */
   clientCertFingerprint: text("client_cert_fingerprint"),
 
-  lastConnectedAt: timestamptz("last_connected_at"),
+  lastConnectedAt: timestamp("last_connected_at"),
 
   connectedIp: text("connected_ip"),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export type AgentEnrollment = typeof agentEnrollments.$inferSelect;

@@ -1,7 +1,7 @@
 import {
   jsonb,
   pgTable,
-  timestamptz,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -40,9 +40,9 @@ export const organizations = pgTable("organizations", {
 
   stripeCustomerId: varchar("stripe_customer_id", { length: 100 }).unique(),
 
-  createdAt: timestamptz("created_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 
-  updatedAt: timestamptz("updated_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export type Organization = typeof organizations.$inferSelect;
