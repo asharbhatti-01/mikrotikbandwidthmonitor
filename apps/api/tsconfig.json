@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "paths": {
+      "@mikrotik/db": ["../../packages/db/src/index.ts"],
+      "@mikrotik/db/schema": ["../../packages/db/src/schema/index.ts"],
+      "@mikrotik/types": ["../../packages/types/src/index.ts"]
+    },
+    "types": ["bun-types"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

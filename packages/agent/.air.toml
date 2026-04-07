@@ -1,0 +1,53 @@
+# Air configuration for live reload during development.
+# https://github.com/air-verse/air
+#
+# Usage:  air  (from the packages/agent directory)
+# Install: go install github.com/air-verse/air@latest
+
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  # Full build command, mirrors the Makefile `build` target.
+  cmd = "go build -ldflags='-X main.Version=dev' -o ./tmp/agent ./cmd/agent"
+
+  # Binary to execute after a successful build.
+  bin = "./tmp/agent"
+
+  # Arguments forwarded to the running binary.
+  # Override with: air -- --config /path/to/config.json
+  args_bin = ["--config", "./dev-config.json", "--log-level", "debug"]
+
+  # Files and directories that trigger a rebuild when changed.
+  include_ext = ["go", "toml", "json"]
+  exclude_dir  = ["tmp", "bin", "vendor", "testdata"]
+  exclude_file = []
+
+  # Only rebuild when source files actually change (uses file mtime).
+  delay = 200  # milliseconds to wait after a change before rebuilding
+
+  # Kill the running process before restarting.
+  kill_delay = "200ms"
+
+  # Send SIGTERM instead of the default SIGKILL so the agent can shut down
+  # gracefully (flush in-flight messages, close WebSocket, etc.).
+  send_interrupt = true
+  stop_on_error  = true
+
+  # Show build logs in the Air output.
+  log = "air_build.log"
+
+[color]
+  # Colour codes for Air's own status messages.
+  main    = "magenta"
+  watcher = "cyan"
+  build   = "yellow"
+  runner  = "green"
+
+[log]
+  # Show timestamps on Air log lines.
+  time = true
+
+[misc]
+  # Remove the tmp directory when Air exits.
+  clean_on_exit = true

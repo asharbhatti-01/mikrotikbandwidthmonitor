@@ -1,0 +1,24 @@
+{
+  "name": "mikrotik-saas",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "db:migrate": "bun run --filter=@mikrotik/db migrate",
+    "db:generate": "bun run --filter=@mikrotik/db generate",
+    "db:studio": "bun run --filter=@mikrotik/db studio",
+    "db:seed": "bun run --filter=@mikrotik/db seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.7.0",
+    "prettier": "^3.4.0"
+  }
+}
