@@ -5,17 +5,17 @@ WORKDIR /app
 
 # ---- Development ----
 FROM base AS dev
-# Copy everything first
+# Copy all workspace package.jsons
 COPY package.json ./
 COPY apps/web ./apps/web
 COPY packages/ui ./packages/ui
 COPY packages/types ./packages/types
-# Install deps after copy (hoists to /app/node_modules)
-RUN bun install
+# Install deps at root (hoisted) AND in apps/web
+RUN bun install && cd apps/web && bun install
 EXPOSE 3000
 WORKDIR /app/apps/web
 ENV NEXT_TURBOPACK=0
-CMD ["sh", "-c", "ln -sf /app/node_modules ./node_modules 2>/dev/null; exec bun run next dev --port 3000 --hostname 0.0.0.0"]
+CMD ["npx", "next", "dev", "--port", "3000", "--hostname", "0.0.0.0"]
 
 # ---- Dependencies (for build) ----
 FROM base AS deps
@@ -30,7 +30,8 @@ FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npx --prefix apps/web next build
+WORKDIR /app/apps/web
+RUN npx next build
 
 # ---- Production / Staging ----
 FROM base AS production

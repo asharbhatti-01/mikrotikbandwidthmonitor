@@ -84,6 +84,7 @@ services:
       - ./apps/web:/app/apps/web
       - ./packages/ui:/app/packages/ui
       - ./packages/types:/app/packages/types
+      - web_node_modules:/app/apps/web/node_modules
     env_file: .env.dev
     environment:
       NODE_ENV: development
@@ -133,3 +134,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  web_node_modules:
