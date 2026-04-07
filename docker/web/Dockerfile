@@ -5,11 +5,17 @@ WORKDIR /app
 
 # ---- Development ----
 FROM base AS dev
+# Copy root package.json and all workspace package.jsons
 COPY package.json ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/types/package.json ./packages/types/
+# Install all deps at root level (hoisted node_modules)
 RUN bun install
+# Copy web source for initial startup (volume mount overrides in compose)
+COPY apps/web ./apps/web
+COPY packages/ui ./packages/ui
+COPY packages/types ./packages/types
 EXPOSE 3000
 WORKDIR /app/apps/web
 CMD ["npx", "next", "dev", "--port", "3000", "--hostname", "0.0.0.0"]
@@ -27,7 +33,8 @@ FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npx --prefix apps/web next build
+WORKDIR /app/apps/web
+RUN npx next build
 
 # ---- Production / Staging ----
 FROM base AS production
