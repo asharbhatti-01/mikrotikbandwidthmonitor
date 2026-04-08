@@ -59,10 +59,8 @@ export async function createContext(
       image: session.user.image,
     };
 
-    // The active org comes from the x-org-id request header.
-    // Better Auth's organisation plugin also stores activeOrganizationId on
-    // the session object — fall back to that if the header is absent.
-    const orgId =
+    // Resolve org: x-org-id header > session.activeOrganizationId > first org membership
+    let orgId =
       opts.req.headers.get("x-org-id") ??
       (
         session.session as Record<string, unknown> & {
@@ -70,6 +68,21 @@ export async function createContext(
         }
       ).activeOrganizationId ??
       null;
+
+    // Auto-resolve: if no org specified, look up user's first org membership
+    if (!orgId) {
+      try {
+        const result = await db.execute(
+          `SELECT "organizationId" FROM member WHERE "userId" = '${session.user.id}' LIMIT 1`
+        );
+        const rows = result as unknown as Array<{ organizationId: string }>;
+        if (rows.length > 0) {
+          orgId = rows[0].organizationId;
+        }
+      } catch {
+        // ignore — org will remain null
+      }
+    }
 
     if (orgId) {
       org = { id: orgId };

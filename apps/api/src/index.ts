@@ -20,6 +20,7 @@ app.use(
     origin: [
       process.env["WEB_URL"] ?? "http://localhost:3000",
       "http://localhost:3000",
+      "https://mkmgmt.computecloud.net",
     ],
     allowHeaders: ["Content-Type", "Authorization", "x-org-id", "x-trpc-source"],
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

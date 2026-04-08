@@ -55,6 +55,7 @@ export const auth = betterAuth({
 
   trustedOrigins: [
     process.env["WEB_URL"] ?? "http://localhost:3000",
+    "https://mkmgmt.computecloud.net",
   ],
 });
 
