@@ -1,7 +1,6 @@
 import { betterAuth } from "better-auth";
 import { organization } from "better-auth/plugins";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "./lib/db.js";
+import { Pool } from "pg";
 
 /**
  * Better Auth instance for the MikroTik SaaS platform.
@@ -14,8 +13,8 @@ import { db } from "./lib/db.js";
  *  - organization: multi-tenant org support with invitations and roles
  */
 export const auth = betterAuth({
-  database: drizzleAdapter(db, {
-    provider: "pg",
+  database: new Pool({
+    connectionString: process.env["DATABASE_URL"] ?? "postgresql://postgres:postgres@localhost:5432/mikrotik_saas",
   }),
 
   secret: process.env["BETTER_AUTH_SECRET"] ?? "change-me-in-production",
