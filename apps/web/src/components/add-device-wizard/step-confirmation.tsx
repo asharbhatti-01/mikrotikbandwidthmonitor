@@ -32,6 +32,13 @@ export function StepConfirmation({ formData, testResult, createdDeviceId, onFini
         description: formData.description,
         tags: formData.tags,
         siteId: formData.siteId ?? undefined,
+        username: formData.username || undefined,
+        password: formData.password || undefined,
+        snmpCommunity: formData.snmpCommunity || undefined,
+        snmpVersion: formData.snmpVersion || undefined,
+        rosVersion: testResult?.rosVersion,
+        boardName: testResult?.boardName,
+        model: testResult?.model,
       })
     }
     utils.devices.list.invalidate()

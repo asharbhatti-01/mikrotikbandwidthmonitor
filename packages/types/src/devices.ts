@@ -29,6 +29,15 @@ export const addDeviceSchema = z.object({
   description: z.string().optional(),
   siteId: z.string().uuid().optional(),
   tags: z.array(z.string()).optional(),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  sshKey: z.string().optional(),
+  authMethod: z.enum(["password", "key"]).optional(),
+  snmpCommunity: z.string().optional(),
+  snmpVersion: z.enum(["v2c", "v3"]).optional(),
+  rosVersion: z.string().optional(),
+  boardName: z.string().optional(),
+  model: z.string().optional(),
 });
 
 /**

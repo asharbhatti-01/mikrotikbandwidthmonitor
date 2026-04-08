@@ -108,7 +108,6 @@ function AgentForm({ formData, createdDeviceId, setCreatedDeviceId, enrollmentTo
 
 function DirectConnectionForm({ formData, updateFormData, testResult, setTestResult }: Props) {
   const testConn = trpc.devices.testConnection.useMutation()
-  const isRest = formData.connectionType === 'rest'
 
   function handleTest() {
     setTestResult(null)
@@ -118,7 +117,7 @@ function DirectConnectionForm({ formData, updateFormData, testResult, setTestRes
         ipAddress: formData.ipAddress,
         port: formData.port,
         username: formData.username,
-        password: formData.password,
+        password: formData.authMethod === 'password' ? formData.password : undefined,
       },
       { onSuccess: (r) => setTestResult(r as TestResult) },
     )
@@ -147,17 +146,40 @@ function DirectConnectionForm({ formData, updateFormData, testResult, setTestRes
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-zinc-300">Username</label>
-          <input
-            type="text"
-            value={formData.username}
-            onChange={(e) => updateFormData({ username: e.target.value })}
-            placeholder="admin"
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-blue-600"
-          />
+
+      {/* Auth method toggle */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-zinc-300">Authentication</label>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => updateFormData({ authMethod: 'password' })}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${formData.authMethod === 'password' ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-400 border border-zinc-700'}`}
+          >
+            Password
+          </button>
+          <button
+            type="button"
+            onClick={() => updateFormData({ authMethod: 'key' })}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${formData.authMethod === 'key' ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-400 border border-zinc-700'}`}
+          >
+            SSH Key
+          </button>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-zinc-300">Username</label>
+        <input
+          type="text"
+          value={formData.username}
+          onChange={(e) => updateFormData({ username: e.target.value })}
+          placeholder="admin"
+          className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-blue-600"
+        />
+      </div>
+
+      {formData.authMethod === 'password' ? (
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-zinc-300">Password</label>
           <input
@@ -167,7 +189,19 @@ function DirectConnectionForm({ formData, updateFormData, testResult, setTestRes
             className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-blue-600"
           />
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-zinc-300">SSH Private Key</label>
+          <textarea
+            value={formData.sshKey}
+            onChange={(e) => updateFormData({ sshKey: e.target.value })}
+            placeholder="-----BEGIN RSA PRIVATE KEY-----&#10;...&#10;-----END RSA PRIVATE KEY-----"
+            rows={4}
+            className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-blue-600 font-mono text-xs resize-none"
+          />
+          <p className="text-xs text-zinc-500">Paste your private key. It will be encrypted at rest.</p>
+        </div>
+      )}
 
       <button
         onClick={handleTest}

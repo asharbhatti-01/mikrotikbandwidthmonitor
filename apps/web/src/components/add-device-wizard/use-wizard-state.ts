@@ -15,6 +15,8 @@ export interface WizardFormData {
   port: number
   username: string
   password: string
+  sshKey: string
+  authMethod: 'password' | 'key'
   snmpCommunity: string
   snmpVersion: 'v2c' | 'v3'
 }
@@ -37,6 +39,8 @@ const INITIAL_FORM: WizardFormData = {
   port: 443,
   username: 'admin',
   password: '',
+  sshKey: '',
+  authMethod: 'password',
   snmpCommunity: 'public',
   snmpVersion: 'v2c',
 }

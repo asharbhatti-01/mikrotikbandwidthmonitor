@@ -110,18 +110,31 @@ export const devicesRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { db, org } = ctx;
 
+      const values: Record<string, unknown> = {
+        orgId: org.id,
+        name: input.name,
+        connectionType: input.connectionType,
+        ipAddress: input.ipAddress,
+        apiPort: input.apiPort ?? (input.connectionType === 'rest' ? 443 : 8728),
+        description: input.description,
+        siteId: input.siteId,
+        tags: input.tags ?? [],
+        rosVersion: input.rosVersion,
+        boardName: input.boardName,
+        model: input.model,
+      };
+
+      // Encrypt and store credentials
+      if (input.username) values.apiUsernameEnc = encryptCredential(input.username);
+      if (input.password) values.apiPasswordEnc = encryptCredential(input.password);
+      if (input.sshKey) values.sshKeyEnc = encryptCredential(input.sshKey);
+      if (input.authMethod) values.authMethod = input.authMethod;
+      if (input.snmpCommunity) values.snmpCommunity = input.snmpCommunity;
+      if (input.snmpVersion) values.snmpVersion = input.snmpVersion;
+
       const [device] = await db
         .insert(devices)
-        .values({
-          orgId: org.id,
-          name: input.name,
-          connectionType: input.connectionType,
-          ipAddress: input.ipAddress,
-          apiPort: input.apiPort ?? 8728,
-          description: input.description,
-          siteId: input.siteId,
-          tags: input.tags ?? [],
-        })
+        .values(values as typeof devices.$inferInsert)
         .returning();
 
       return device!;
