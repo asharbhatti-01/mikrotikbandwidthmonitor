@@ -25,7 +25,7 @@ export default function SignupPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000"}/auth/signup`,
+        `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"}/auth/sign-up/email`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
