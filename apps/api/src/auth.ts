@@ -20,6 +20,7 @@ export const auth = betterAuth({
 
   secret: process.env["BETTER_AUTH_SECRET"] ?? "change-me-in-production",
 
+  basePath: "/auth",
   baseURL: process.env["BETTER_AUTH_URL"] ?? "http://localhost:3001",
 
   emailAndPassword: {
