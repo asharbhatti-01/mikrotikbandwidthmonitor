@@ -6,6 +6,7 @@ import { configRouter } from "./routers/config.js";
 import { alertsRouter } from "./routers/alerts.js";
 import { billingRouter } from "./routers/billing.js";
 import { auditRouter } from "./routers/audit.js";
+import { sitesRouter } from "./routers/sites.js";
 
 export { router, publicProcedure, authedProcedure, protectedProcedure };
 
@@ -17,6 +18,7 @@ export const appRouter = router({
   alerts: alertsRouter,
   billing: billingRouter,
   audit: auditRouter,
+  sites: sitesRouter,
 });
 
 export type AppRouter = typeof appRouter;

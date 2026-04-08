@@ -71,6 +71,32 @@ export const deviceMetricSchema = z.object({
   interfaces: z.array(deviceInterfaceMetricSchema),
 });
 
+export const testConnectionSchema = z.object({
+  connectionType: connectionTypeEnum,
+  ipAddress: z.string(),
+  port: z.number().int().optional(),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  snmpCommunity: z.string().optional(),
+  snmpVersion: z.enum(["v2c", "v3"]).optional(),
+});
+
+export const generateEnrollTokenSchema = z.object({
+  deviceId: z.string().uuid(),
+});
+
+export const checkEnrollmentSchema = z.object({
+  deviceId: z.string().uuid(),
+});
+
+export const connectionTestResultSchema = z.object({
+  success: z.boolean(),
+  rosVersion: z.string().optional(),
+  boardName: z.string().optional(),
+  model: z.string().optional(),
+  error: z.string().optional(),
+});
+
 export type ConnectionType = z.infer<typeof connectionTypeEnum>;
 export type DeviceStatus = z.infer<typeof deviceStatusEnum>;
 export type AddDeviceInput = z.infer<typeof addDeviceSchema>;
@@ -78,3 +104,7 @@ export type UpdateDeviceInput = z.infer<typeof updateDeviceSchema>;
 export type DeviceListInput = z.infer<typeof deviceListInputSchema>;
 export type DeviceInterfaceMetric = z.infer<typeof deviceInterfaceMetricSchema>;
 export type DeviceMetric = z.infer<typeof deviceMetricSchema>;
+export type TestConnectionInput = z.infer<typeof testConnectionSchema>;
+export type GenerateEnrollTokenInput = z.infer<typeof generateEnrollTokenSchema>;
+export type CheckEnrollmentInput = z.infer<typeof checkEnrollmentSchema>;
+export type ConnectionTestResult = z.infer<typeof connectionTestResultSchema>;

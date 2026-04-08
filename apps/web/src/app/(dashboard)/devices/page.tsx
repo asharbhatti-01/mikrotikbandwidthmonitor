@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Search, Plus, RefreshCw, MonitorSmartphone } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { DeviceStatusBadge } from "@/components/device-status-badge";
-import { AddDeviceDialog } from "@/components/add-device-dialog";
+import { AddDeviceWizard } from "@/components/add-device-wizard";
 import type { DeviceStatus } from "@mikrotik/types";
 
 const STATUS_OPTIONS: { value: DeviceStatus | "all"; label: string }[] = [
@@ -43,7 +43,7 @@ export default function DevicesPage() {
 
   return (
     <>
-      <AddDeviceDialog open={addOpen} onClose={() => setAddOpen(false)} />
+      <AddDeviceWizard open={addOpen} onClose={() => setAddOpen(false)} />
 
       {/* Page header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

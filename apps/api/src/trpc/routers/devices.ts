@@ -6,8 +6,16 @@ import {
   addDeviceSchema,
   updateDeviceSchema,
   deviceListInputSchema,
+  testConnectionSchema,
+  generateEnrollTokenSchema,
+  checkEnrollmentSchema,
 } from "@mikrotik/types";
-import { devices, deviceMetrics } from "@mikrotik/db/schema";
+import { devices, deviceMetrics, agentEnrollments } from "@mikrotik/db/schema";
+import { randomBytes } from "crypto";
+import { testRestConnection } from "../../lib/routeros-rest.js";
+import { testBinaryApiConnection } from "../../lib/routeros-api.js";
+import { testSnmpConnection } from "../../lib/snmp-test.js";
+import { encryptCredential } from "../../lib/encryption.js";
 
 /**
  * Devices router — CRUD operations, status refresh, and metric history.
@@ -256,5 +264,101 @@ export const devicesRouter = router({
         .limit(input.limit);
 
       return metrics;
+    }),
+
+  testConnection: protectedProcedure
+    .input(testConnectionSchema)
+    .mutation(async ({ input }) => {
+      switch (input.connectionType) {
+        case 'rest':
+          return testRestConnection(
+            input.ipAddress,
+            input.port ?? 443,
+            input.username ?? 'admin',
+            input.password ?? '',
+          )
+        case 'binary_api':
+          return testBinaryApiConnection(
+            input.ipAddress,
+            input.port ?? 8728,
+            input.username ?? 'admin',
+            input.password ?? '',
+          )
+        case 'snmp':
+          return testSnmpConnection(
+            input.ipAddress,
+            input.snmpCommunity ?? 'public',
+            input.snmpVersion ?? 'v2c',
+          )
+        default:
+          return { success: false, error: 'Agent mode does not support connection testing' }
+      }
+    }),
+
+  generateEnrollToken: protectedProcedure
+    .input(generateEnrollTokenSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { db, org } = ctx
+
+      const [device] = await db
+        .select({ id: devices.id })
+        .from(devices)
+        .where(and(eq(devices.id, input.deviceId), eq(devices.orgId, org.id)))
+        .limit(1)
+
+      if (!device) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Device not found' })
+      }
+
+      const token = randomBytes(32).toString('hex')
+
+      await db.insert(agentEnrollments).values({
+        deviceId: input.deviceId,
+        enrollToken: token,
+      })
+
+      const baseUrl = process.env['PUBLIC_URL'] ?? 'https://mkmgmt.computecloud.net'
+      const installCommand = `curl -sSL ${baseUrl}/install | sh -s -- --token ${token}`
+
+      return { token, installCommand }
+    }),
+
+  checkEnrollment: protectedProcedure
+    .input(checkEnrollmentSchema)
+    .query(async ({ ctx, input }) => {
+      const { db, org } = ctx
+
+      // Verify device belongs to org
+      const [device] = await db
+        .select({ id: devices.id })
+        .from(devices)
+        .where(and(eq(devices.id, input.deviceId), eq(devices.orgId, org.id)))
+        .limit(1)
+
+      if (!device) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Device not found' })
+      }
+
+      const [enrollment] = await db
+        .select()
+        .from(agentEnrollments)
+        .where(
+          and(
+            eq(agentEnrollments.deviceId, input.deviceId),
+            eq(agentEnrollments.tokenUsed, true),
+          ),
+        )
+        .limit(1)
+
+      if (!enrollment) {
+        return { enrolled: false }
+      }
+
+      return {
+        enrolled: true,
+        agentVersion: enrollment.agentVersion,
+        connectedIp: enrollment.connectedIp,
+        lastConnectedAt: enrollment.lastConnectedAt,
+      }
     }),
 });
