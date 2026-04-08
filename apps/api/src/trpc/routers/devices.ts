@@ -99,7 +99,26 @@ export const devicesRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Device not found" });
       }
 
-      return device;
+      // Fetch latest metric snapshot for live data
+      const [latestMetric] = await db
+        .select()
+        .from(deviceMetrics)
+        .where(eq(deviceMetrics.deviceId, device.id))
+        .orderBy(desc(deviceMetrics.collectedAt))
+        .limit(1);
+
+      const ifaces = latestMetric?.interfaces;
+      const ifaceArray = Array.isArray(ifaces) ? ifaces : (typeof ifaces === 'string' ? JSON.parse(ifaces) : []);
+
+      return {
+        ...device,
+        routerOsVersion: device.rosVersion,
+        uptimeSeconds: device.uptimeSeconds ? Number(device.uptimeSeconds) : null,
+        lastCpuLoad: latestMetric?.cpuLoad ?? null,
+        lastFreeMemory: latestMetric?.freeMemory ?? null,
+        lastTotalMemory: latestMetric?.totalMemory ?? null,
+        interfaceCount: ifaceArray.length || null,
+      };
     }),
 
   /**
